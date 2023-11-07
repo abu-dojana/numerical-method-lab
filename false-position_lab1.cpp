@@ -7,7 +7,7 @@ float f(float x)
     return x*x*x - x -1;
 }
 
-void bisection()
+void false_position()
 {
     float x0, x1 , x2 , e;
 
@@ -47,6 +47,6 @@ void bisection()
 
 int main()
 {
-    bisection();
+    false_position();
     return 0;
 }
