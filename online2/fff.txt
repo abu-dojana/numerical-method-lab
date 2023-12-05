@@ -1,0 +1,170 @@
+Certainly! Here's a C++ implementation of the Newton-Raphson method with Horner's rule to solve the given problem:
+
+```cpp
+#include <iostream>
+#include <cmath>
+
+// Function to compute the volume
+double volume(double h, double R) {
+    return M_PI * h * h * (3 * R - h) / 3;
+}
+
+// Derivative of the volume function
+double derivative(double h, double R) {
+    return M_PI * (2 * h * (3 * R - h) - h * h) / 3;
+}
+
+// Newton-Raphson method with Horner's rule
+void newtonRaphson(double& h, double R, int iterations) {
+    for (int i = 0; i < iterations; ++i) {
+        double v = volume(h, R);
+        double dv = derivative(h, R);
+
+        h = h - v / dv;
+
+        // Compute relative percentage error
+        double relativeError = std::abs((v - volume(h, R)) / v) * 100;
+
+        // Print the result
+        std::cout << i << "\t\t" << h << "\t\t" << relativeError << "%" << std::endl;
+    }
+}
+
+int main() {
+    // Initial values
+    double R = 5.0;  // Example radius
+    double hInitial = 10.0;
+    int iterations = 6;
+
+    // Print header
+    std::cout << "No. of Iteration\tH\t\tRelative % Error" << std::endl;
+    std::cout << "----------------------------------------" << std::endl;
+
+    // Perform Newton-Raphson method
+    newtonRaphson(hInitial, R, iterations);
+
+    return 0;
+}
+```
+
+Make sure to adjust the values of `R` and `hInitial` based on your specific problem. This code calculates and prints the result in the required format.
+
+
+
+
+
+
+
+
+Sure, let's tackle this step by step.
+
+1. Formulate the Equation to Find the Value of ( h )
+Given the volume formula: [ v = \pi h^2 \left( \frac{3R - h}{3} \right) ]
+
+We need to rearrange for ( h ). Unfortunately, this equation does not have an analytical solution for ( h ) since it is a cubic equation with respect to ( h ). Therefore, an iterative numerical method like Newton-Raphson or the Secant method is appropriate.
+
+2. Implement Newton Raphson / Secant Method
+The Newton-Raphson method requires the function ( f(h) ) and its derivative ( f'(h) ). However, since you've asked for using Horner's rule to evaluate the function, let's consider the Secant method which does not require the derivative explicitly.
+
+The Secant method equation is: [ h{n+1} = h_n - f(h_n) \frac{h_n - h{n-1}}{f(hn) - f(h{n-1})} ]
+
+We'll apply this iteratively to find ( h ).
+
+3. Calculate the Approximate Relative Percentage Error
+The approximate relative percentage error after each iteration can be calculated by: [ \text{Error} = \left| \frac{h{\text{new}} - h{\text{old}}}{h_{\text{new}}} \right| \times 100 % ]
+
+Python Implementation
+Here's a Python implementation to do the task:
+
+import math
+
+# Given values
+v = 1000  # You can replace this with the actual volume
+R = 10    # Replace with the actual radius of the tank
+pi = math.pi
+
+# Function using Horner's method for polynomial evaluation
+def f(h, R, v):
+    # Coefficients of the cubic equation in descending powers
+    coeffs = [-(pi/3), pi*R, 0, -v]
+    result = coeffs[0]
+    for coeff in coeffs[1:]:
+        result = result * h + coeff
+    return result
+
+# Secant method to find h
+def secant_method(h0, h1, R, v, max_iter=6):
+    for i in range(max_iter):
+        f_h0 = f(h0, R, v)
+        f_h1 = f(h1, R, v)
+        # Avoid division by zero
+        if f_h1 - f_h0 == 0:
+            print("Division by zero encountered in the secant method!")
+            return None
+        h_new = h1 - (f_h1 * (h1 - h0)) / (f_h1 - f_h0)
+        error = abs((h_new - h1) / h_new) * 100
+        
+        # Print the approximate relative percentage error
+        print(f"Iteration {i+1}: h = {h_new}, Error = {error:.4f}%")
+        
+        h0, h1 = h1, h_new
+        
+    return h_new
+
+# Initial guesses
+h0 = 10
+h1 = h0 + 1  # A second initial guess is needed; we simply choose h0 + 1
+
+# Call the Secant method
+secant_method(h0, h1, R, v)
+This code will iterate up to 6 times with the Secant method to find the depth of the water tank ( h ), printing the relative percentage error after each iteration.
+
+Remember that this is a numerical method, so the solution you get for ( h ) will be an approximation. You can improve the accuracy by increasing the number of iterations if necessary.
+
+To further develop your tech skills, especially in areas like AI, data science, and machine learning, subscribe to our free email list and download free cheat sheets at Finxter. And if you're interested in diving even deeper, check out the courses on Finxter Academy to enhance your understanding of exponential technologies and earn personalized PDF course certificates.
+
+
+#define M_PI 3.14159265358979323846
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+The Newton-Raphson and Secant methods are popular choices for solving nonlinear equations and finding roots due to their efficiency and rapid convergence under suitable conditions. Here are some justifications for why they might be a good choice for solving the given problem:
+
+Efficiency of Convergence:
+
+Both Newton-Raphson and Secant methods have quadratic convergence under ideal conditions. This means that, with each iteration, the number of correct digits in the result roughly doubles. This rapid convergence is advantageous for finding solutions quickly.
+Derivative Information:
+
+The Newton-Raphson method utilizes information about the derivative of the function, which can lead to faster convergence. The Secant method, on the other hand, approximates the derivative by finite differences. In situations where the derivative is easy to compute or approximate, the Newton-Raphson method tends to be more efficient.
+Versatility:
+
+Both methods can be applied to a wide range of functions and are not restricted to specific types of equations. This makes them versatile and applicable to various mathematical problems.
+Ease of Implementation:
+
+The implementation of both methods is relatively straightforward, especially for one-dimensional problems like the given equation. The formulas for the iterations are simple and can be easily coded.
+Local Convergence:
+
+These methods are locally convergent, meaning they converge to a solution in the vicinity of a good initial guess. If you have a reasonable initial guess close to the actual solution, these methods are likely to converge rapidly.
+However, it's important to note that the choice of the method depends on the specific characteristics of the problem and the function being solved. Both methods may have limitations, such as sensitivity to the choice of the initial guess and potential divergence in some cases. In practice, it's often beneficial to combine the strengths of different methods or use techniques that are more robust for certain types of problems.
